@@ -1,0 +1,118 @@
+import pylab 
+import matplotlib as plt 
+import numpy as np 
+#import os
+#os.chdir('/Users/ritakajtar/typhon/typhon/')
+import typhon
+
+path='/Users/ritakajtar/arts/controlfiles/artscomponents/oem/TestOEM_dei(I)/O3_only/'
+path2='/Users/ritakajtar/arts/controlfiles/testdata/'
+
+x=typhon.arts.xml.load(path+'TestOEM_ret_O3.x.xml')  # retrieval
+xa=typhon.arts.xml.load(path+'TestOEM_ret_O3.xa.xml')  # a priori
+x_true=typhon.arts.xml.load(path+'TestOEM_ret_O3.x_true.xml')  # true 
+
+covmat_sx=typhon.arts.xml.load(path+'TestOEM_ret_O3.covmat_sx.xml')
+covmat_so=typhon.arts.xml.load(path+'TestOEM_ret_O3.covmat_so.xml')
+covmat_se=typhon.arts.xml.load(path+'TestOEM_ret_O3.covmat_se.xml')
+
+p_grid=typhon.arts.xml.load(path+'p_grid_194elem.xml') 
+p_ret_grid=typhon.arts.xml.load(path+'p_ret_grid.xml') 
+#p_grid_O3=typhon.arts.xml.load(path+'p_grid_O3.xml')
+
+y=typhon.arts.xml.load(path+'TestOEM_ret_O3.y.xml') 
+y_f=typhon.arts.xml.load(path+'TestOEM_meas_O3.y_f.xml') 
+yf=typhon.arts.xml.load(path+'yf_ret.xml') 
+f_backend=typhon.arts.xml.load(path+'TestOEM_ret_O3.f_backend.xml') 
+#f_backend_error=typhon.arts.xml.load(path+'TestOEM_ret.f_backend_error.xml') 
+AvKe=typhon.arts.xml.load(path+'TestOEM_ret_O3.avk.xml')
+#yy=typhon.arts.xml.load(path+'yy.xml')
+#y_ozone=np.log10(y)
+
+jacobian=typhon.arts.xml.load(path+'TestOEM_ret_O3.jacobian.xml')
+z_field=typhon.arts.xml.load(path+'TestOEM_meas_O3.z_field.xml')
+
+plt.style.use('seaborn') 
+
+
+################################# figure 1 ####################################
+
+plt.pyplot.figure() 
+manager = plt.pyplot.get_current_fig_manager()
+manager.window.showMaximized() 
+
+########################## measurement spectrum ###############################
+
+plt.pyplot.subplot(2, 2, 1) 
+
+pylab.plot(y_f, y, color='blue', label='measurement') 
+pylab.plot(y_f, yf, '-.', color='red', label='fitted') 
+
+plt.pyplot.xlabel('Frequency [GHz]',fontsize=20)
+plt.pyplot.ylabel('Bt [K]',fontsize=20)
+plt.pyplot.title('Measurement spectrum',fontsize=20)
+plt.pyplot.xticks(fontsize=13) 
+plt.pyplot.yticks(fontsize=13)
+
+pylab.legend(loc=0)
+
+########################### x, xa, x_true profiles ############################
+
+plt.pyplot.subplot(2, 2, 3)  
+ 
+#pylab.semilogy(x[0:194]*1e-6, p_grid, '-', color='blue', linewidth=1.8, label='retrieval') 
+#pylab.semilogy(xa[0:194]*1e-6, p_grid, '-.', color='red', linewidth=1.8, label='a priori' ) 
+
+######pylab.semilogy(x_true[0,:,0,0]*1e-6, p_grid, '-', color='black', linewidth=1.8, label='true') 
+#pylab.semilogy(x_true[0:194]*1e-6, p_grid, '-.', color='black', linewidth=1.8, label='true') 
+ 
+pylab.plot(x[0:194]*1e-6, z_field[:,0,0]*1e-3, '-', color='blue', linewidth=1.8, label='retrieval') 
+pylab.plot(xa[0:194]*1e-6, z_field[:,0,0]*1e-3, '-.', color='red', linewidth=1.8, label='a priori' )  
+pylab.plot(x_true[0:194]*1e-6, z_field[:,0,0]*1e-3, '-.', color='black', linewidth=1.8, label='true') 
+
+#ax=plt.pyplot.gca()
+#ax.invert_yaxis()
+
+plt.pyplot.xlabel('vmr',fontsize=20)
+plt.pyplot.ylabel('Altitude',fontsize=20) 
+plt.pyplot.title('\u03C3$_{ozone}$$^{2}$ = 1e-13',fontsize=20) 
+plt.pyplot.xticks(fontsize=13) 
+plt.pyplot.yticks(fontsize=13)
+
+pylab.legend(loc=0)
+
+############################## Ozone Jacobian #################################
+
+plt.pyplot.subplot(2, 2, 2) 
+
+
+plt.pyplot.contourf(f_backend, np.log(p_grid), jacobian[:,0:194].T, 300, cmap='RdBu_r') 
+plt.pyplot.colorbar() 
+plt.pyplot.xlabel('Frequency [GHz]',fontsize=20)
+plt.pyplot.ylabel('Pressure',fontsize=20)
+plt.pyplot.title('Ozone Jacobian (only ozone)',fontsize=20)
+plt.pyplot.xticks(fontsize=13) 
+plt.pyplot.yticks(fontsize=13)
+
+ax=plt.pyplot.gca()
+ax.invert_yaxis()
+
+################################## AvKe #######################################
+
+plt.pyplot.subplot(2, 2, 4) 
+
+
+#plt.pyplot.contourf(AvKe[0:194,0:194], 300, cmap='RdBu_r')
+pylab.plot(AvKe[0:194,0:194], z_field[:,0,0]*1e-3, linewidth=0.2)
+#plt.pyplot.colorbar() 
+plt.pyplot.xlabel('Sensitivity',fontsize=20)
+plt.pyplot.ylabel('Altitude',fontsize=20)
+plt.pyplot.title('Ozone AvKe',fontsize=20)
+plt.pyplot.xticks(fontsize=13) 
+plt.pyplot.yticks(fontsize=13)
+
+###############################################################################
+
+plt.pyplot.tight_layout() 
+
+plt.pyplot.savefig('Sx_error.png')
