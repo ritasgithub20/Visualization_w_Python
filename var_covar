@@ -1,0 +1,107 @@
+import random 
+import numpy as np 
+import statistics
+
+
+a=[] 
+
+for i in range(0,5):
+    x=random.randint(1,10)
+    a.append(x) 
+    
+print('the random data points are: ' + str(a)) 
+
+print('the mean of the data points is: ' + str(statistics.mean(a)))
+
+print('the sample variance of the data points is: ' + str(statistics.variance(a))) 
+
+print('the population variance of the data points is: ' + str(statistics.pvariance(a))) 
+
+######### OR 
+	
+from numpy import array
+from numpy import mean 
+
+v = array([1,2,3,4,5,6])
+print(v)
+result = mean(v)
+print('the mean of the datapoints stored in v is: ' + str(result)) 
+
+######### mean of both rows and columns 
+
+from numpy import array
+from numpy import mean 
+
+M = array([[1,2,3,4,5,6],[1,2,3,4,5,6]])
+print(M)
+col_mean = mean(M, axis=0)
+print('the mean of the datapoints stored in col_mean is: ' + str(col_mean))
+row_mean = mean(M, axis=1)
+print('the mean of the datapoints stored in row_mean is: ' + str(row_mean)) 
+
+######## sample variance 
+
+from numpy import array
+from numpy import var 
+
+v = array([1,2,3,4,5,6])
+print(v)
+result = var(v, ddof=1)
+print('the variance of the datapoints is: ' + str(result))
+
+######## sample variance of rows and columns 
+
+from numpy import array
+from numpy import var 
+
+M = array([[1,2,3,4,5,6],[1,2,3,4,5,6]])
+print(M)
+col_mean = var(M, ddof=1, axis=0)
+print(col_mean)
+row_mean = var(M, ddof=1, axis=1)
+print(row_mean)
+
+######## sample variance on columns and rows
+
+from numpy import array
+from numpy import std 
+
+M = array([[1,2,3,4,5,6],[1,2,3,4,5,6]])
+print(M)
+col_mean = std(M, ddof=1, axis=0)
+print('the variance of the datapoints on columns is: ' + str(col_mean))
+row_mean = std(M, ddof=1, axis=1)
+print('the variance of the datapoints on rows is: ' + str(row_mean))  
+
+######## covariance of two variables 
+	
+from numpy import array
+from numpy import cov
+x = array([1,2,3,4,5,6,7,8,9])
+print(x)
+y = array([9,8,7,6,5,4,3,2,1])
+print(y)
+Sigma = cov(x,y)[0,1]
+print('the covariance of the two variables is: ' + str(Sigma)) 
+
+####### corrcoef of two variables 
+	
+from numpy import array
+from numpy import corrcoef
+x = array([1,2,3,4,5,6,7,8,9])
+print(x)
+y = array([9,8,7,6,5,4,3,2,1])
+print(y)
+Sigma = corrcoef(x,y)
+print('the correlation coefficient of the two variables is: ' + str(Sigma)) 
+
+####### covariance matrix 
+	
+from numpy import array
+from numpy import cov
+x = array([1,2,3,4,5,6,7,8,9])
+print(x)
+y = array([9,8,7,6,5,4,3,2,1])
+print(y)
+Sigma = cov(x,y)
+print('the covariance matrix of the two variables is: ' + str(Sigma))
